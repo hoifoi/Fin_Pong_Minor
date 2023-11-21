@@ -1,3 +1,7 @@
+const jwt = require('jsonwebtoken');
+const { v4 } = require('uuid')
+const secretKey = process.env.TYPEORM_SECRET_KEY
+
 const queryBuilder1 = async( data ) => {
     let query = 'SELECT'
     query = query + ' mf.user_id, u.name, ft.status, mf.date, c.category, mf.memo, mf.amount'
@@ -53,7 +57,20 @@ const queryBuilder2 = async( data ) => {
     return query
 }
 
+const createToken = (email) => {
+  return jwt.sign({email},secretKey,{expiresIn:"1h",})
+};
+
+const makeUuid = () => {
+  const uuid = v4().split('-');
+  const newUuid = uuid[0] + uuid[1];
+
+  return newUuid.substr(0,8);
+}
+
 module.exports = {
     queryBuilder1,
     queryBuilder2,
+    createToken,
+    makeUuid,
 }
