@@ -8,6 +8,4 @@ router.post('/book', loginRequired, familyController.newBook);
 router.post('/join', loginRequired, familyController.joinBook);
 router.get('/auth-code', loginRequired ,familyController.getFamilyAuthCode)
 
-module.exports = {
-  router
-}
+module.exports.router = router;

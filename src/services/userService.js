@@ -71,8 +71,14 @@ const userInfo = async(userId) => {
   return result
 }
 
+const getNameById = async (userId) => {
+  const result = await userDao.getNameById(userId);
+  return result[0].name;
+}
+
 module.exports = {
   signInSignUp,
   addInformation,
   userInfo,
+  getNameById
 }
