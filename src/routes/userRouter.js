@@ -8,6 +8,4 @@ router.post('/auth', userController.signInSignUp);
 router.get('/info', loginRequired, userController.userInfo )
 router.put('/update',loginRequired, userController.addInformation);
 
-module.exports = {
-  router
-}
+module.exports.router = router;
