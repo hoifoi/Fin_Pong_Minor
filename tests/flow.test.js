@@ -185,6 +185,11 @@ describe('get CategoryViewByFamily', () => {
               "id": 3,
               "category": "기타",
               "spending": "1%"
+          },
+          {
+              "id": 4,
+              "category": "기타사항",
+              "spending": "0%"
           }
       ])
   })
@@ -231,6 +236,11 @@ describe('get CategoryViewByPrivate', () => {
               "id": 3,
               "category": "기타",
               "spending": "1%"
+          },
+          {
+              "id": 4,
+              "category": "기타사항",
+              "spending": "0%"
           }
       ])
   })
