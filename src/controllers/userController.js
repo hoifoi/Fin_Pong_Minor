@@ -4,9 +4,9 @@ const signInSignUp = async (req, res) => {
   try {
     const code  = req.body.codeKakao;
   if (!code) {
-    const error = new Error('KEY_ERROR');
-    error.statusCode = 400;
-    throw error;
+    const err = new Error('KEY_ERROR');
+    err.statusCode = 400;
+    throw err;
   };
   const result = await userService.signInSignUp(code);
 
@@ -22,9 +22,9 @@ const addInformation = async(req, res)=>{
   const email = req.user.email;
   const {name, phoneNumber ,birthdate} = req.body;
   if(!name || !phoneNumber || !birthdate){
-    const error = new Error('KEY_ERROR');
-    error.statusCode = 400;
-    throw error;
+    const err = new Error('KEY_ERROR');
+    err.statusCode = 400;
+    throw err;
   } 
   await userService.addInformation(name, phoneNumber ,birthdate, email);
   return res.status(201).json({message:'ADD_INFORMATION_SUCCESS'});

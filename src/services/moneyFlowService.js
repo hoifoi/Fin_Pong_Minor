@@ -37,16 +37,38 @@ const yearlyView = async( userId, familyId, year) => {
     monthlyIncome =  await moneyFlowDao.getMonthlyIncomeByFamily( familyId, year )
     monthlySpending1 = await moneyFlowDao.getMonthlyGeneralSpendingByFamily( familyId, year )
     monthlySpending2 = await moneyFlowDao.getMonthlyFixedSpendingByFamily( familyId, year )
-    for (i=0; i<12; i++){
-      if(!monthlySpending1[i]){
-        monthlySpending1[i] = { family_id : monthlySpending1[0].family_id, month : i+1, spending : 0 }
+    let monthlySpending11 = []
+    for (let i = 1; i <= 12; i++) {
+      const ExistingMonthSpending = monthlySpending1.find((spending) => spending.month === i)
+      if (ExistingMonthSpending) {
+      monthlySpending11.push({
+        ...ExistingMonthSpending,
+        spending : Number(ExistingMonthSpending.spending)})
+      } else {
+        monthlySpending11.push({
+        family_id: familyId,
+        month: i,
+        spending: 0
+        })
       }
     }
-    for (i=0; i<12; i++){
-      if(!monthlySpending2[i]){
-        monthlySpending2[i] = { family_id : monthlySpending2[0].family_id, month : i+1, spending : 0 }
+    let monthlySpending22 = []
+    for (let i = 1; i <= 12; i++) {
+      const ExistingMonthSpending = monthlySpending2.find((spending) => spending.month === i)
+      if (ExistingMonthSpending) {
+      monthlySpending22.push({
+        ...ExistingMonthSpending,
+        spending : Number(ExistingMonthSpending.spending)})
+      } else {
+        monthlySpending22.push({
+        family_id: familyId,
+        month: i,
+        spending: 0
+        })
       }
     }
+    monthlySpending1 = monthlySpending11
+    monthlySpending2 = monthlySpending22
     monthlySpending = monthlySpending1.map((item, index) => ({
       family_id: item.family_id,
       month: item.month,
@@ -56,28 +78,43 @@ const yearlyView = async( userId, familyId, year) => {
     monthlyIncome =  await moneyFlowDao.getMonthlyIncomeByPrivate( userId, year )
     monthlySpending1 = await moneyFlowDao.getMonthlyGeneralSpendingByPrivate( userId, year )
     monthlySpending2 = await moneyFlowDao.getMonthlyFixedSpendingByPrivate( userId, year )
-    for (i=0; i<12; i++){
-      if(!monthlySpending1[i]){
-        monthlySpending1[i] = { user_id : monthlySpending1[0].user_id, month : i+1, spending : 0 }
+    let monthlySpending11 = []
+    for (let i = 1; i <= 12; i++) {
+      const ExistingMonthSpending = monthlySpending1.find((spending) => spending.month === i)
+      if (ExistingMonthSpending) {
+      monthlySpending11.push({
+        ...ExistingMonthSpending,
+        spending : Number(ExistingMonthSpending.spending)})
+      } else {
+        monthlySpending11.push({
+        user_id: userId,
+        month: i,
+        spending: 0
+        })
       }
     }
-    if(monthlySpending2.length==0){
-      for (i=0; i<monthlySpending1.length; i++){
-        monthlySpending1[i].spending = Number(monthlySpending1[i].spending)
+    let monthlySpending22 = []
+    for (let i = 1; i <= 12; i++) {
+      const ExistingMonthSpending = monthlySpending2.find((spending) => spending.month === i)
+      if (ExistingMonthSpending) {
+      monthlySpending22.push({
+        ...ExistingMonthSpending,
+        spending : Number(ExistingMonthSpending.spending)})
+      } else {
+        monthlySpending22.push({
+        user_id: userId,
+        month: i,
+        spending: 0
+        })
       }
-      monthlySpending = monthlySpending1
-    }else{
-      for (i=0; i<12; i++){
-        if(!monthlySpending2[i]){
-          monthlySpending2[i] = { user_id : monthlySpending2[0].user_id, month : i+1, spending : 0 }
-        }
-      }
-      monthlySpending = monthlySpending1.map((item, index) => ({
-        family_id: item.family_id,
-        month: item.month,
-        spending: (Number(item.spending) + Number(monthlySpending2[index].spending))
-      }))
     }
+    monthlySpending1 = monthlySpending11
+    monthlySpending2 = monthlySpending22
+    monthlySpending = monthlySpending1.map((item, index) => ({
+      user_id: item.user_id,
+      month: item.month,
+      spending: (Number(item.spending) + Number(monthlySpending2[index].spending))
+    }))
   }
   const monthIndex = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   let incomeTable = {}

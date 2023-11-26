@@ -1,4 +1,5 @@
 const { appDataSource } = require('../utils/dataSource');
+const error = require('../utils/error')
 
 const getUserInfo = async(userId) => {
   return await appDataSource.query(`
@@ -60,7 +61,7 @@ const addInformation = async(name, phoneNumber ,birthdate, email) => {
     `,
     [name, phoneNumber, birthdate, email]
     )
-  if (result.insertId === 0) {
+  if (result.affectedRows === 0) {
   error.throwErr(500, 'DATA_INSERTION_FAILED');
   }
   else {

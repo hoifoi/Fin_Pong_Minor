@@ -25,9 +25,9 @@ const signInSignUp = async(code) => {
     },
   });
   if (!result || result.status !== 200) {
-    const error = new Error('KAKAO_CONNECTION ERROR');
-    error.statusCode = 400;
-    throw error;
+    const err = new Error('KAKAO_CONNECTION ERROR');
+    err.statusCode = 400;
+    throw err;
   };
   
   const email = result.data.kakao_account.email
