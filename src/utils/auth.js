@@ -10,12 +10,10 @@ const loginRequired = async (req, res, next) => {
       error.throwErr(401, 'NEEDED_ACCESS_TOKEN');
     }
     const payload = jwt.verify(accessToken, secretKey);
-    const [ user ] = await userDao.getUserByEmail(payload.email);
-    if (!user) {
+    const [ userInfo ] = await userDao.getUserInformationById( payload.id );
+    if (!userInfo) {
       error.throwErr(404, 'USER_DOES_NOT_EXIST');
     }
-    req.user = user;
-    const userInfo = await userDao.getUserInformationById( user.id );
     req.userData = userInfo;
     next();
   } catch(err) {

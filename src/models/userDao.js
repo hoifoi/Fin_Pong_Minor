@@ -15,26 +15,8 @@ const getUserInfo = async(userId) => {
     )
 };
 
-const getUserByEmail = async(email) => {
-  const result = await appDataSource.query(
-    `
-    SELECT * 
-    FROM users 
-    WHERE email = ?
-    `,
-    [email]
-    )
-  if (result.insertId === 0) {
-  error.throwErr(500, 'DATA_INSERTION_FAILED');
-  }
-  else {
-    return result;
-  }
-};
-
 const createUserByEmail = async(email) => {
-  const result = await appDataSource.query(
-    `
+  const result = await appDataSource.query(`
     INSERT INTO users (email) 
     VALUES (?)
     `,
@@ -62,34 +44,35 @@ const addInformation = async(name, phoneNumber ,birthdate, email) => {
     [name, phoneNumber, birthdate, email]
     )
   if (result.affectedRows === 0) {
-  error.throwErr(500, 'DATA_INSERTION_FAILED');
-  }
-  else {
+    error.throwErr(500, 'DATA_INSERTION_FAILED');
+  }else{
     return result;
   }
 };
 
 const getUserInformationById = async( userId ) => {
-  
-  const [ result ] = await appDataSource.query(`
-    SELECT id AS userId
-    FROM users
-    WHERE id = ?;
-  `, 
-  [ userId ])
-  const [ result1 ] = await appDataSource.query(`
-    SELECT u.id AS userId, uf.family_id AS familyId, role_id AS roleId
+  return await appDataSource.query(
+    `
+    SELECT
+        u.id as userId,
+        u.email,
+        u.name,
+        u.email,
+        u.birthdate,
+        u.phone_number,
+        u.created_at,
+        u.updated_at,
+        u.deleted_at,
+        uf.family_id as familyId,
+        uf.role_id as roleId,
+        f.auth_code
     FROM users u
-    JOIN users_families uf 
-    ON u.id = uf.user_id
-    WHERE u.id = ?;
-  `, 
-  [ userId ])
-  if (!result1) {
-    return result;
-  } else {
-    return result1;
-  }
+      LEFT JOIN users_families uf on u.id = uf.user_id
+      LEFT JOIN families f on uf.family_id = f.id
+      WHERE u.id = ?
+      `,
+      [ userId ]
+    )
 }
 
 const getNameById = async (userId) => {
@@ -104,7 +87,6 @@ const getNameById = async (userId) => {
 }
 
 module.exports = {
-  getUserByEmail,
   createUserByEmail,
   addInformation,
   getUserInformationById,
